@@ -1,0 +1,54 @@
+@layer components {
+    .button {
+        padding: var(--size-1);
+        width: 100%;
+        height: var(--control-height-md);
+        font-size: var(--font-size-sm);
+        color: var(--color-text-highlight);
+        border-radius: var(--radius-md);
+        box-sizing: border-box;
+        cursor: pointer;
+        transition: filter 120ms ease, opacity 120ms ease, transform 120ms ease;
+    }
+
+    .button:hover:not(:disabled) {
+        filter: brightness(0.97);
+        transform: translateY(-1px);
+    }
+
+    .button:active:not(:disabled) {
+        transform: translateY(0);
+    }
+
+    .button:focus-visible {
+        outline: none;
+        box-shadow: 0 0 0 var(--border-width-medium) color-mix(in srgb, var(--color-border-highlight) 35%, transparent);
+    }
+
+    .button--default {
+        color: var(--color-text-highlight);
+        border-color: var(--color-border-highlight);
+        background-color: var(--color-background-highlight);
+    }
+
+    .button--success {
+        color: var(--color-text-success);
+        border-color: var(--color-border-success);
+        background-color: var(--color-background-success);
+    }
+
+    .button--warning {
+        color: var(--color-text-warning);
+        border-color: var(--color-border-warning);
+        background-color: var(--color-background-warning);
+    }
+
+    .button--disabled,
+    .button:disabled {
+        cursor: not-allowed;
+        transform: none;
+        color: var(--color-text-disabled);
+        border-color: var(--color-border-disabled);
+        background-color: var(--color-background-disabled);
+    }
+}

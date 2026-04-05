@@ -1,0 +1,77 @@
+@theme {
+    /*fonts*/
+    --font-primary: var(--font-mono);
+    --font-size-xs: 0.75rem;
+    --font-size-sm: 0.875rem;
+    --font-size-base: 1rem;
+    --font-size-lg: 1.125rem;
+    --font-size-xl: 1.25rem;
+    --font-size-2xl: 1.5rem;
+
+    /*background colors*/
+    --color-background-primary: var(--color-amber-50);
+    --color-background-highlight: var(--color-cyan-700);
+    --color-background-success: var(--color-emerald-50);
+    --color-background-warning: var(--color-red-50);
+    --color-background-disabled: var(--color-slate-300);
+
+    /*text colors*/
+    --color-text-primary: var(--color-slate-700);
+    --color-text-highlight: var(--color-cyan-50);
+    --color-text-success: var(--color-emerald-600);
+    --color-text-warning: var(--color-red-600);
+    --color-text-disabled: var(--color-slate-400);
+
+    /*border colors*/
+    --color-border-primary: var(--color-amber-500);
+    --color-border-highlight: var(--color-cyan-900);
+    --color-border-success: var(--color-emerald-600);
+    --color-border-warning: var(--color-red-600);
+    --color-border-muted: var(--color-slate-200);
+    --color-border-disabled: var(--color-slate-400);
+
+    /*sizes*/
+    --size-1: 0.25rem;
+    --size-2: 0.5rem;
+    --size-3: 0.75rem;
+    --size-4: 1rem;
+    --size-5: 1.25rem;
+    --size-6: 1.5rem;
+    --size-8: 2rem;
+    --size-10: 2.5rem;
+    --size-12: 3rem;
+    --radius-sm: 0.25rem;
+    --radius-md: 0.5rem;
+    --radius-lg: 0.75rem;
+    --radius-xl: 1rem;
+    --content-width-sm: 36rem;
+    --content-width-md: 48rem;
+    --content-width-lg: 64rem;
+    --content-width-xl: 72rem;
+    --content-height-sm: 24rem;
+    --content-height-md: 32rem;
+    --content-height-lg: 40rem;
+    --content-height-xl: 48rem;
+    --control-height-sm: 2rem;
+    --control-height-md: 2.5rem;
+    --control-height-lg: 3rem;
+    --input-height-sm: var(--control-height-sm);
+    --input-height-md: var(--control-height-md);
+    --input-height-lg: var(--control-height-lg);
+    --button-height-sm: var(--control-height-sm);
+    --button-height-md: var(--control-height-md);
+    --button-height-lg: var(--control-height-lg);
+
+    /*borders*/
+    --border-width-thin: 1px;
+    --border-width-medium: 2px;
+    --border-width-thick: 4px;
+    --border-style-default: solid;
+    --border-default: var(--border-width-thin) var(--border-style-default) var(--color-border-muted);
+    --border-primary: var(--border-width-thin) var(--border-style-default) var(--color-border-primary);
+    --border-success: var(--border-width-thin) var(--border-style-default) var(--color-border-success);
+    --border-warning: var(--border-width-thin) var(--border-style-default) var(--color-border-warning);
+    --border-highlight: var(--border-width-thin) var(--border-style-default) var(--color-border-highlight);
+    --border-disabled: var(--border-width-thin) var(--border-style-default) var(--color-border-disabled);
+    --opacity-disabled: 0.65;
+}

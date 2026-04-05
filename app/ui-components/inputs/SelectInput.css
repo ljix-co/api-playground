@@ -1,0 +1,85 @@
+@layer components {
+    .select {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: var(--size-2);
+    }
+
+    .select__container {
+        position: relative;
+    }
+
+    .select__trigger {
+        padding: var(--size-3) var(--size-4);
+        width: 100%;
+        height: var(--control-height-md);
+        font-family: var(--font-primary);
+        font-size: var(--font-size-base);
+        color: var(--color-text-primary);
+        border: var(--border-default);
+        border-radius: var(--radius-md);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background-color: var(--color-background-primary);
+        box-sizing: border-box;
+        cursor: pointer;
+        outline: none;
+        transition: border-color 120ms ease, box-shadow 120ms ease, opacity 120ms ease;
+    }
+
+    .select__trigger:focus-visible {
+        border-color: var(--color-border-highlight);
+        box-shadow: 0 0 0 var(--border-width-medium) color-mix(in srgb, var(--color-border-highlight) 35%, transparent);
+    }
+
+    .select__menu {
+        position: absolute;
+        top: calc(100% + var(--size-1));
+        right: 0;
+        left: 0;
+        z-index: 10;
+        border: var(--border-default);
+        border-radius: var(--radius-md);
+        background-color: var(--color-background-primary);
+        overflow: hidden;
+    }
+
+    .select__option {
+        padding: var(--size-3) var(--size-4);
+        width: 100%;
+        text-align: left;
+        font-family: var(--font-primary);
+        font-size: var(--font-size-base);
+        color: var(--color-text-primary);
+        border: none;
+        background: transparent;
+        cursor: pointer;
+    }
+
+    .select__option:hover {
+        background-color: color-mix(in srgb, var(--color-background-highlight) 16%, transparent);
+    }
+
+    .select--default .select__trigger {
+        border-color: var(--color-border-primary);
+    }
+
+    .select--success .select__trigger {
+        color: var(--color-text-success);
+        border-color: var(--color-border-success);
+        background-color: var(--color-background-success);
+    }
+
+    .select--error .select__trigger {
+        color: var(--color-text-warning);
+        border-color: var(--color-border-warning);
+        background-color: var(--color-background-warning);
+    }
+
+    .select--disabled .select__trigger {
+        opacity: 0.65;
+        cursor: not-allowed;
+    }
+}

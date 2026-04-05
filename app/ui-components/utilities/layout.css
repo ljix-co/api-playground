@@ -1,0 +1,70 @@
+@layer utilities {
+    .layout-page {
+        padding: var(--size-8);
+        min-height: 100vh;
+        width: 100%;
+    }
+
+    .layout-container {
+        margin-inline: auto;
+        width: 100%;
+        max-width: var(--content-width-xl);
+    }
+
+    .layout-stack {
+        display: flex;
+        flex-direction: column;
+        gap: var(--size-4);
+    }
+
+    .layout-row {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        gap: var(--size-4);
+    }
+
+    .layout-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: var(--size-4);
+    }
+
+    .layout-grid--2 {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: var(--size-4);
+    }
+
+    .layout-grid--3 {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: var(--size-4);
+    }
+
+    .layout-grid--auto {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+        gap: var(--size-4);
+    }
+
+    .layout-card {
+        padding: var(--size-4);
+        border: var(--border-default);
+        border-radius: var(--radius-xl);
+        background-color: var(--color-background-primary);
+    }
+}
+
+@media (min-width: 64rem) {
+    @layer utilities {
+        .layout-grid--2 {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .layout-grid--3 {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+    }
+}

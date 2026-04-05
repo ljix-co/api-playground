@@ -1,0 +1,44 @@
+@layer components {
+    .status-message {
+        padding: var(--size-4);
+        width: 100%;
+        font-family: var(--font-primary);
+        font-size: var(--font-size-sm);
+        line-height: 1.5;
+        color: var(--color-text-primary);
+        border: var(--border-default);
+        border-left-width: var(--border-width-thick);
+        border-radius: var(--radius-md);
+        background-color: var(--color-background-primary);
+    }
+
+    .status-message--idle {
+        color: var(--color-text-primary);
+        border-color: var(--color-border-primary);
+        background-color: var(--color-background-primary);
+    }
+
+    .status-message--sending {
+        color: var(--color-text-warning);
+        border-color: var(--color-border-warning);
+        background-color: var(--color-background-warning);
+    }
+
+    .status-message--waiting {
+        color: var(--color-text-highlight);
+        border-color: var(--color-border-highlight);
+        background-color: var(--color-background-highlight);
+    }
+
+    .status-message--success {
+        color: var(--color-text-success);
+        border-color: var(--color-border-success);
+        background-color: var(--color-background-success);
+    }
+
+    .status-message--error {
+        color: var(--color-text-warning);
+        border-color: var(--color-border-warning);
+        background-color: var(--color-background-warning);
+    }
+}
