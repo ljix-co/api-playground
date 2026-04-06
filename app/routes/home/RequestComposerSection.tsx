@@ -1,14 +1,15 @@
 import React from 'react';
 import { Input, SelectInput, TextArea, Button, Form, ButtonStates } from '../../ui-components';
 import { isValidJson, isValidTimeout, isValidUrl } from '~/utils/validations';
-import { HttpMethods, type HttpMethod } from '~/services/types';
+import { HttpMethods, PipelineStages, type HttpMethod } from '~/services/types';
 import type { FormValues } from '~/ui-components/form/types';
 import { useServiceContext } from '~/services/ServiceContext';
 import InputNumber from '~/ui-components/inputs/InputNumber';
 
 const RequestComposerSection: React.FC = () => {
-    const { executeRequest, resetPipelineStage } = useServiceContext();
+    const { executeRequest, resetPipelineStage, pipelineStage } = useServiceContext();
     const [hasAdvancedOptions, setHasAdvancedOptions] = React.useState(false);
+
     const handleSubmit = async (values: FormValues) => {
         const { url, method, body, timeout } = values;
         await executeRequest(
@@ -27,6 +28,8 @@ const RequestComposerSection: React.FC = () => {
                 name="APIForm"
                 onSubmit={handleSubmit}
                 onChange={resetPipelineStage}
+                isDisabled={pipelineStage === PipelineStages.SENDING
+                    || pipelineStage === PipelineStages.WAITING}
             >
                 {(formValues, errors) => {
                     return (
@@ -38,7 +41,7 @@ const RequestComposerSection: React.FC = () => {
                                     placeholder="Enter API URL"
                                     validator={{
                                         validatorMethod: isValidUrl,
-                                        errors: "Please enter a valid URL"
+                                        errors: ["Please enter a valid URL"]
                                     }}
                                 />
                                 <SelectInput
@@ -51,7 +54,8 @@ const RequestComposerSection: React.FC = () => {
                                     <Button
                                         label='Send Request'
                                         type="submit"
-                                        state={errors && Object.values(errors).some(error => error.length > 0)
+                                        state={(pipelineStage === PipelineStages.SENDING || pipelineStage === PipelineStages.WAITING)
+                                            || (errors && Object.values(errors).some(error => error.length > 0))
                                             ? ButtonStates.DISABLED
                                             : ButtonStates.DEFAULT
                                         }
@@ -64,7 +68,7 @@ const RequestComposerSection: React.FC = () => {
                                         onClick={() => setHasAdvancedOptions(!hasAdvancedOptions)}
                                         className="text-blue-500 hover:underline cursor-pointer"
                                     >
-                                        Advanced options {hasAdvancedOptions ? '-' : '+'}
+                                        Additional options {hasAdvancedOptions ? '-' : '+'}
                                     </p>
                                     {hasAdvancedOptions && (
                                         <div className="w-1/3">
@@ -76,7 +80,7 @@ const RequestComposerSection: React.FC = () => {
                                                 max={120}
                                                 validator={{
                                                     validatorMethod: (timeout) => isValidTimeout(timeout, 120, 1),
-                                                    errors: "Please enter a valid timeout between 1 and 120 seconds."
+                                                    errors: ["Please enter a valid timeout between 1 and 120 seconds."]
                                                 }}
                                             />
                                         </div>
@@ -90,7 +94,7 @@ const RequestComposerSection: React.FC = () => {
                                             placeholder="Enter request body (for POST/PUT)"
                                             validator={{
                                                 validatorMethod: (value) => isValidJson(value),
-                                                errors: "Please enter valid JSON"
+                                                errors: ["Please enter valid JSON"]
                                             }}
                                         />
                                     </div>

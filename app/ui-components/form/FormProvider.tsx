@@ -23,7 +23,7 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children }) => {
 
     const getFieldValue = useCallback((name: string) => values?.[name], [values]);
 
-    const setFieldErrors = useCallback((name: string, errors: string | string[]) => {
+    const setFieldErrors = useCallback((name: string, errors: string[]) => {
         setErrors((previous) => {
             if (previous && previous[name] === errors) {
                 return previous;
@@ -76,7 +76,7 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children }) => {
     }, []);
 
     const isFieldRegistred = (name: string) => {
-        return !!Object.keys(fieldsRef.current).find(key => key == name)
+        return !!Object.keys(fieldsRef.current).find(key => key === name)
     }
 
     const setFieldValidator = (name: string, validator: FieldValidator) => {

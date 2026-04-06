@@ -1,27 +1,27 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { FormProvider } from './FormProvider';
-import type { FormProps } from './types';
+import type { FormProps, FormValues } from './types';
 import FormField from './FormField';
 import { useFormContext } from './FormContext';
-import type { FieldType } from '../inputs/types';
+import { type FieldProps, type FieldType } from '../inputs/types';
 
 const isFormControlElement = (child: React.ReactNode) => {
     return React.isValidElement(child) && !!(child.type as FieldType)?.isFormControl;
 };
 
-const wrapChildrenWithFormField = (children: React.ReactNode): React.ReactNode => {
+const wrapChildrenWithFormField = (children: React.ReactNode, isDisabled: boolean): React.ReactNode => {
     return React.Children.map(children, (child) => {
         if (!React.isValidElement(child)) return child;
 
         if (child.type === FormField) return child;
 
-        if (isFormControlElement(child)) {
-            const { name, label, validator } = child.props as { name?: string; label?: string; validator?: any };
+        if (isFormControlElement(child) && React.isValidElement<FieldProps>(child)) {
+            const { name, label, validator } = child.props;
 
             if (!name) return child;
 
             return (
-                <FormField name={name} label={label} validator={validator}>
+                <FormField name={name} label={label} validator={validator} isDisabled={isDisabled} >
                     {child}
                 </FormField>
             );
@@ -30,7 +30,7 @@ const wrapChildrenWithFormField = (children: React.ReactNode): React.ReactNode =
         if (React.isValidElement<{ children?: React.ReactNode }>(child) && child.props.children) {
             return React.cloneElement(child, {
                 ...child.props,
-                children: wrapChildrenWithFormField(child.props.children),
+                children: wrapChildrenWithFormField(child.props.children, isDisabled),
             });
         }
 
@@ -39,20 +39,15 @@ const wrapChildrenWithFormField = (children: React.ReactNode): React.ReactNode =
 };
 
 const InnerForm: React.FC<FormProps> = (props) => {
-    const { children, className = '', onChange, onSubmit, ...restProps } = props;
-    const { setValues, values, validateField, errors, validateAllFields } = useFormContext();
+    const { children, className = '', onChange, onSubmit, isDisabled = false, ...restProps } = props;
+    const { values, validateField, errors, validateAllFields } = useFormContext();
     const formClassName = ['space-y-4', className].filter(Boolean).join(' ');
+    const prevFormValuesRef = useRef<FormValues | null>(null);
 
     // allow functions with form values to be passed as children
     const resolvedChildren = typeof children === 'function'
         ? children(values || {}, errors || {})
         : children;
-
-    const handleChange = (event: React.ChangeEvent<HTMLFormElement>) => {
-        const values = Object.fromEntries(new FormData(event.currentTarget).entries());
-        setValues(values);
-        onChange?.(values);
-    };
 
     const handleSubmit = (event: React.SubmitEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -71,15 +66,29 @@ const InnerForm: React.FC<FormProps> = (props) => {
         validateField(event.target.name);
     };
 
+    useEffect(() => {
+        if (!values || typeof onChange !== 'function' || isDisabled) return;
+
+        const prevValues = prevFormValuesRef.current;
+        const isFormChanged = !prevValues
+            || Object.keys(values).length !== Object.keys(prevValues).length
+            || Object.entries(values).some(([key, value]) => (
+                prevValues[key] !== value
+            ));
+        if (!isFormChanged) return;
+
+        prevFormValuesRef.current = values;
+        onChange(values)
+    }, [values, onChange, isDisabled])
+
     return (
         <form
             className={formClassName}
-            onChange={handleChange}
             onSubmit={handleSubmit}
             onBlur={handleBlur}
             {...restProps}
         >
-            {wrapChildrenWithFormField(resolvedChildren)}
+            {wrapChildrenWithFormField(resolvedChildren, isDisabled)}
         </form>
     );
 };

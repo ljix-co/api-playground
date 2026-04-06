@@ -1,3 +1,4 @@
+import ServiceError from "./ServiceError";
 import { ErrorTypes, type FetchApiResponseResult } from "./types";
 
 export const handleError = (error: unknown, signal?: AbortSignal): FetchApiResponseResult => {
@@ -7,11 +8,21 @@ export const handleError = (error: unknown, signal?: AbortSignal): FetchApiRespo
             message: signal?.reason === ErrorTypes.TIMEOUT.toLowerCase()
             ? 'Request has timed out.'
             : 'Request was cancelled.',
-            status: null,
+            status: signal?.reason === ErrorTypes.TIMEOUT.toLowerCase() ? 408 : 499,
             statusText: null,
             errorType: signal?.reason === ErrorTypes.TIMEOUT.toLowerCase()
                 ? ErrorTypes.TIMEOUT
                 : ErrorTypes.CANCEL
+        };
+    }
+
+    if (error instanceof ServiceError) {
+        return {
+            success: false,
+            message: error.message,
+            status: error.status,
+            statusText: error.statusText,
+            errorType: error.type
         };
     }
 

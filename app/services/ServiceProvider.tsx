@@ -3,6 +3,11 @@ import { ErrorTypes, PipelineStages, type FetchApiResponseError, type FetchApiRe
 import { fetchApiResponse } from "./apiPlaygroundService";
 import { ServiceContext } from "./ServiceContext";
 
+const MIN_SENDING_DURATION_MS = 400;
+const wait = (ms: number) => new Promise((resolve) => {
+    return setTimeout(resolve, ms)
+});
+
 const ServiceProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [response, setResponse] = useState<FetchApiResponseSuccess | null>(null);
     const [pipelineStage, setPipelineStage] = useState<typeof PipelineStages[keyof typeof PipelineStages]>(PipelineStages.IDLE);
@@ -11,8 +16,8 @@ const ServiceProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
     const [timeoutCounter, setTimeoutCounter] = useState<number | null>(null);
     const [responseTime, setResponseTime] = useState<number | null>(null);
     const controllerRef = React.useRef<AbortController | null>(null);
-    const timeoutIdRef = React.useRef<NodeJS.Timeout | null>(null);
-    const intervalIdRef = React.useRef<NodeJS.Timeout | null>(null);
+    const timeoutIdRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+    const intervalIdRef = React.useRef<ReturnType<typeof setInterval> | null>(null);
 
     const cleanup = () => {
         if (controllerRef.current) {
@@ -37,6 +42,8 @@ const ServiceProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
         setTimeoutCounter(null);
 
         let startTime: number | null = null;
+
+        await wait(MIN_SENDING_DURATION_MS);
 
         const result = await (() => {
             setPipelineStage(PipelineStages.WAITING);
@@ -109,9 +116,17 @@ const ServiceProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
 
     const resetPipelineStage = () => {
         if (pipelineStage !== PipelineStages.SUCCESS
-            && pipelineStage !== PipelineStages.ERROR) return;
+            && pipelineStage !== PipelineStages.ERROR
+            && pipelineStage !== PipelineStages.IDLE) return;
 
-        setPipelineStage(PipelineStages.IDLE);
+        if (cancellationMessage) setCancellationMessage(null);
+        if (timeoutCounter !== null) setTimeoutCounter(null);
+        if (responseTime !== null) setResponseTime(null);
+
+        if (pipelineStage === PipelineStages.SUCCESS
+            || pipelineStage === PipelineStages.ERROR) {
+            setPipelineStage(PipelineStages.IDLE);
+        }
     }
 
     return (

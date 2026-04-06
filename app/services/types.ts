@@ -16,10 +16,15 @@ export const PipelineStages = {
 
 export const ErrorTypes = {
     HTTP: 'HTTP',
+    CLIENT_VALIDATION: 'CLIENT_VALIDATION',
     NETWORK: 'NETWORK',
     CANCEL: 'CANCEL',
     TIMEOUT: 'TIMEOUT',
     UNKNOWN: 'UNKNOWN',
+} as const;
+
+export const CancelRequestAllowedKeys = {
+    ESCAPE: 'ESCAPE'
 } as const;
 
 // type aliases
