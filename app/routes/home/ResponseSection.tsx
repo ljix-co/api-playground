@@ -1,9 +1,8 @@
 import React from "react";
+import { JSON_PRETTY_PRINT_SPACES, SECONDS_IN_MINUTE, TIME_DISPLAY_PAD_LENGTH } from "~/config";
 import { useServiceContext } from "~/services/ServiceContext";
 import { CancelRequestAllowedKeys, PipelineStages } from "~/services/types";
-import Button from "~/ui-components/buttons/Button";
-import { LoadingIndicator, PulsingIndicator } from "~/ui-components/indicators";
-import StatusMessage from "~/ui-components/indicators/StatusMessage";
+import { LoadingIndicator, PulsingIndicator, RequestPipeline, StatusMessage, Button } from "~/ui-components";
 import useKeyboardNavigation from "~/utils/useKeyboardNavigation";
 
 const ResponseSection: React.FC = () => {
@@ -18,14 +17,16 @@ const ResponseSection: React.FC = () => {
     return (
         <div className="p-4 m-4 layout-card">
             <h2 className="mb-4 text-xl font-semibold">Response</h2>
-            <p className="text-gray-700">Response details will be displayed here after sending a request.</p>
+            <RequestPipeline currentStage={pipelineStage} />
             {timeoutCounter !== null && (
-                <p className="mt-2 text-sm text-red-500">
-                    {String(Math.floor(timeoutCounter / 60)).padStart(2, '0')}:{String(timeoutCounter % 60).padStart(2, '0')}
+                <p className="mt-2 mb-2 text-sm text-red-500">
+                    {String(Math.floor(timeoutCounter / SECONDS_IN_MINUTE)).padStart(TIME_DISPLAY_PAD_LENGTH, '0')}
+                    :
+                    {String(timeoutCounter % SECONDS_IN_MINUTE).padStart(TIME_DISPLAY_PAD_LENGTH, '0')}
                 </p>
             )}
             {responseTime !== null && (
-                <p className="mt-2 text-sm text-gray-500">
+                <p className="mt-2 mb-2 text-sm text-gray-500">
                     Completed {responseTime} ms
                 </p>
             )}
@@ -88,7 +89,7 @@ const ResponseSection: React.FC = () => {
                                 ) : typeof response.data === 'object'
                                     ? (
                                         <div className="layout-card">
-                                            {JSON.stringify(response.data, null, 2)}
+                                            {JSON.stringify(response.data, null, JSON_PRETTY_PRINT_SPACES)}
                                         </div>
                                     )
                                     : (

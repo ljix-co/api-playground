@@ -1,10 +1,10 @@
 import React from 'react';
-import { Input, SelectInput, TextArea, Button, Form, ButtonStates } from '../../ui-components';
+import { REQUEST_TIMEOUT_MAX_SECONDS, REQUEST_TIMEOUT_MIN_SECONDS } from '~/config';
+import { Input, SelectInput, TextArea, Button, Form, ButtonStates, InputNumber } from '~/ui-components';
 import { isValidJson, isValidTimeout, isValidUrl } from '~/utils/validations';
 import { HttpMethods, PipelineStages, type HttpMethod } from '~/services/types';
 import type { FormValues } from '~/ui-components/form/types';
 import { useServiceContext } from '~/services/ServiceContext';
-import InputNumber from '~/ui-components/inputs/InputNumber';
 
 const RequestComposerSection: React.FC = () => {
     const { executeRequest, resetPipelineStage, pipelineStage } = useServiceContext();
@@ -76,11 +76,11 @@ const RequestComposerSection: React.FC = () => {
                                                 name="timeout"
                                                 label="Timeout (s)"
                                                 placeholder="Enter timeout in seconds"
-                                                min={1}
-                                                max={120}
+                                                min={REQUEST_TIMEOUT_MIN_SECONDS}
+                                                max={REQUEST_TIMEOUT_MAX_SECONDS}
                                                 validator={{
-                                                    validatorMethod: (timeout) => isValidTimeout(timeout, 120, 1),
-                                                    errors: ["Please enter a valid timeout between 1 and 120 seconds."]
+                                                    validatorMethod: (timeout) => isValidTimeout(timeout, REQUEST_TIMEOUT_MAX_SECONDS, REQUEST_TIMEOUT_MIN_SECONDS),
+                                                    errors: [`Please enter a valid timeout between ${REQUEST_TIMEOUT_MIN_SECONDS} and ${REQUEST_TIMEOUT_MAX_SECONDS} seconds.`]
                                                 }}
                                             />
                                         </div>

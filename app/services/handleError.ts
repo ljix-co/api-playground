@@ -1,3 +1,4 @@
+import { HTTP_STATUS_CLIENT_CLOSED_REQUEST, HTTP_STATUS_REQUEST_TIMEOUT } from "~/config";
 import ServiceError from "./ServiceError";
 import { ErrorTypes, type FetchApiResponseResult } from "./types";
 
@@ -8,7 +9,9 @@ export const handleError = (error: unknown, signal?: AbortSignal): FetchApiRespo
             message: signal?.reason === ErrorTypes.TIMEOUT.toLowerCase()
             ? 'Request has timed out.'
             : 'Request was cancelled.',
-            status: signal?.reason === ErrorTypes.TIMEOUT.toLowerCase() ? 408 : 499,
+            status: signal?.reason === ErrorTypes.TIMEOUT.toLowerCase()
+                ? HTTP_STATUS_REQUEST_TIMEOUT
+                : HTTP_STATUS_CLIENT_CLOSED_REQUEST,
             statusText: null,
             errorType: signal?.reason === ErrorTypes.TIMEOUT.toLowerCase()
                 ? ErrorTypes.TIMEOUT

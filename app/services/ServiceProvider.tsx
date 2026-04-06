@@ -1,9 +1,9 @@
 import React, { useState } from "react";
+import { MILLISECONDS_IN_SECOND, MOCK_REQUEST_TIMEOUT_BUFFER_MS, PIPELINE_MIN_SENDING_DURATION_MS } from "~/config";
 import { ErrorTypes, PipelineStages, type FetchApiResponseError, type FetchApiResponseSuccess, type HttpMethod, type RequestParams } from "./types";
 import { fetchApiResponse } from "./apiPlaygroundService";
 import { ServiceContext } from "./ServiceContext";
 
-const MIN_SENDING_DURATION_MS = 400;
 const wait = (ms: number) => new Promise((resolve) => {
     return setTimeout(resolve, ms)
 });
@@ -43,7 +43,7 @@ const ServiceProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
 
         let startTime: number | null = null;
 
-        await wait(MIN_SENDING_DURATION_MS);
+        await wait(PIPELINE_MIN_SENDING_DURATION_MS);
 
         const result = await (() => {
             setPipelineStage(PipelineStages.WAITING);
@@ -63,7 +63,7 @@ const ServiceProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
                 const timeoutId = setTimeout(() => {
                     setTimeoutCounter(0);
                     controller.abort('timeout');
-                }, options.timeout * 1000);
+                }, options.timeout * MILLISECONDS_IN_SECOND);
                 timeoutIdRef.current = timeoutId;
 
                 const intervalId = setInterval(() => {
@@ -71,14 +71,14 @@ const ServiceProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
                         if (!prev) return null;
                         return prev > 0 ? prev - 1 : 0;
                     });
-                }, 1000);
+                }, MILLISECONDS_IN_SECOND);
                 intervalIdRef.current = intervalId;
 
                 requestParams = {
                     ...requestParams,
                     options: {
                         signal: controller.signal,
-                        delayMs: options.timeout * 1000 + 15
+                        delayMs: options.timeout * MILLISECONDS_IN_SECOND + MOCK_REQUEST_TIMEOUT_BUFFER_MS
                     }
                 };
             }

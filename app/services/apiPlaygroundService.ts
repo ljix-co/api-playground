@@ -1,3 +1,4 @@
+import { HTTP_STATUS_BAD_REQUEST, HTTP_STATUS_OK, MOCK_REQUEST_DELAY_MS } from "~/config";
 import { isValidJson } from "~/utils/validations";
 import { handleError } from "./handleError";
 import { handleResponse } from "./handleResponse";
@@ -23,7 +24,7 @@ export const fetchApiResponse = async (requestParams: RequestParams): Promise<Fe
             if (!isBodyValid) {
                 throw new ServiceError({
                     type: ErrorTypes.CLIENT_VALIDATION,
-                    status: 400,
+                    status: HTTP_STATUS_BAD_REQUEST,
                     statusText: 'Bad Request',
                     message: 'Body is not in valid JSON format'
                 });
@@ -42,7 +43,7 @@ export const fetchApiResponse = async (requestParams: RequestParams): Promise<Fe
     }
 };
 
-export const mockRequest = ({ signal, delayMs = 2000 }: { signal: AbortSignal, delayMs?: number }): Promise<Response> => {
+export const mockRequest = ({ signal, delayMs = MOCK_REQUEST_DELAY_MS }: { signal: AbortSignal, delayMs?: number }): Promise<Response> => {
     return new Promise((resolve, reject) => {
         if (signal.aborted) {
             return reject(new DOMException('The operation was aborted.', 'AbortError'));
@@ -53,7 +54,7 @@ export const mockRequest = ({ signal, delayMs = 2000 }: { signal: AbortSignal, d
                 new Response(
                     JSON.stringify({ message: 'This is a mocked response.' }),
                     {
-                        status: 200,
+                        status: HTTP_STATUS_OK,
                         headers: { 'Content-Type': 'application/json' },
                     }
                 )
